@@ -18,6 +18,8 @@ void setup() {
   // Initialize SoftwareSerial for communication with Bluetooth module
   bluetooth.begin(9600);
 
+  
+
   // Set the LED pin as an output
   // pinMode(ledPin, OUTPUT);
  
@@ -36,6 +38,10 @@ void loop() {
     if (receivedChar == '/') {
       Serial.println(text);
       float value = atof(text);
+      if (value>1023){
+        value=1023;
+      }
+
       Serial.println(value);
       
       n=0;}
