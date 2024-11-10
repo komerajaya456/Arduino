@@ -1,4 +1,11 @@
 #include <SoftwareSerial.h>
+#include <Servo.h>
+
+Servo servo1;  // Create a Servo object for the first servo
+Servo servo2;  // Create a Servo object for the second servo
+
+Servo servo3;  // Create a Servo object for the first servo
+Servo servo4;  // Create a Servo object for the second servo
 
 // Define the pins for SoftwareSerial
 const int rxPin = 10; // Receive pin
@@ -18,7 +25,11 @@ void setup() {
   // Initialize SoftwareSerial for communication with Bluetooth module
   bluetooth.begin(9600);
 
-  
+  servo1.attach(5);
+  servo2.attach(6);
+  servo3.attach(3);
+  servo4.attach(9);
+
 
   // Set the LED pin as an output
   // pinMode(ledPin, OUTPUT);
@@ -32,9 +43,11 @@ void loop() {
   if (bluetooth.available()) {
     // Read the incoming byte from Bluetooth
     char receivedChar = bluetooth.read();
+      
+   if ((receivedChar >= '0' && receivedChar <= '9') || receivedChar == '.' || receivedChar == '/') {
     
-   
-   
+          servo1.detach();  
+          servo2.detach();  
     if (receivedChar == '/') {
       Serial.println(text);
       float value = atof(text);
@@ -48,7 +61,30 @@ void loop() {
     else{
       text[n]=receivedChar;
       n=n+1;}
-   
+      }
+
+
+  else if (receivedChar == 'S') {
+        // Notify the app that servos are busy
+      // bluetooth.write('P');  // Send 'p' for busy
+      Serial.println("P sent");
+      
+      
+
+
+      servo1.write(90);
+      servo2.write(90);
+      servo3.write(90);
+      servo4.write(90);
+      delay(3000);
+      servo1.write(0);
+      servo2.write(0);
+      servo3.write(0);
+      servo4.write(0);
+      
+    }
+
+
   }
 }
 
